@@ -1,6 +1,7 @@
-from fastapi import APIRouter, status, Response
+from fastapi import APIRouter, status, Response, Depends
 from enum import Enum
 from typing import Optional
+from .blog_post import required_function
 
 
 router = APIRouter(
@@ -14,8 +15,8 @@ router = APIRouter(
          description="Get a list of all blogs with optional pagination",
         response_description="A list of blogs")
          
-def get_all_blog(page=1, page_size: Optional[int]=None):
-    return {"message": f" All {page_size} blogs on page {page}"}
+def get_all_blog(page=1, page_size: Optional[int]=None, req_function: dict = Depends(required_function)):
+    return {"message": f" All {page_size} blogs on page {page}", "req_function": req_function }
 
 
 @router.get('/{id}/comment/{comment_id}', tags=['comment'])
