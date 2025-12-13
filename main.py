@@ -1,6 +1,7 @@
 from fastapi import FastAPI, status, Response
 from router import blog_get
 from router import blog_post
+from router import user
 from db import model
 from db.database import engine
 
@@ -10,6 +11,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
+app.include_router(user.router)
 app.include_router(blog_get.router)
 app.include_router(blog_post.router)
 
