@@ -4,5 +4,4 @@ sqlalchemy
 pydantic
 httpx
 python-dotenv
-passlib
 bcrypt

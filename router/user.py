@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status, HTTPException
 from db.database import get_db
-from schemas import UserBase, UserDisplay
+from schemas import UserBase, UserDisplay, ErrorDisplay
 from sqlalchemy.orm.session import Session
 from db import db_user
 from typing import List
@@ -23,10 +23,23 @@ def get_all_users(db: Session=Depends(get_db)):
     return db_user.get_all_users(db)
 
 #Read one user 
-@router.get('/{id}', response_model=UserDisplay)
+@router.get('/{id}', response_model=UserDisplay, responses={404: {'model':ErrorDisplay }})
 def get_user(id: int ,db: Session=Depends(get_db)):
-    return db_user.get_user(db, id)
+    user = db_user.get_user(db, id)
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail={"msg": f"User with id {id} not found", "code": "USER_NOT_FOUND"}
+        )
+    return user
+
 
 #Update user
+@router.post('/{id}/update')
+def update_user(id:int ,request:UserBase , db: Session=Depends(get_db)):
+    return db_user.update_user(db, id, request)
 
 #Delete user
+@router.get('/{id}/delete')
+def delete_user(id:int, db:Session=Depends(get_db)):
+    return db_user.delete_user(db, id)

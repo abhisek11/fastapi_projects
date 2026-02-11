@@ -3,8 +3,8 @@ from pydantic import BaseModel
 class UserBase(BaseModel):
     username: str
     name: str
-    phone: str
     email: str
+    phone: str
     password: str
     
 class UserDisplay(BaseModel):
@@ -13,3 +13,9 @@ class UserDisplay(BaseModel):
 
     class Config():
         from_attributes=True
+
+class ErrorDisplay(BaseModel):
+    msg: str
+    code: str
+
+    

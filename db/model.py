@@ -1,6 +1,9 @@
 from db.database import Base
-from sqlalchemy.sql.sqltypes import Integer, String
+from sqlalchemy.sql.sqltypes import Integer, String, Boolean
+from sqlalchemy.orm import relationship
 from sqlalchemy import Column
+from sqlalchemy.sql.schema import ForeignKey
+
 
 class DBUser(Base):
     __tablename__ = "users"
@@ -10,3 +13,13 @@ class DBUser(Base):
     email = Column(String)
     phone = Column(String)
     password = Column(String)
+    items = relationship('DBArticle', back_populates='user')
+
+class DBArticle(Base):
+    __tablename__= "article"
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String)
+    content = Column(String)
+    published = Column(Boolean)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship('DBUser', back_populates='items')
